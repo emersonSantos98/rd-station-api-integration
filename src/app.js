@@ -53,7 +53,7 @@ class App {
     }
 
     router(){
-        this.server.use('/Api/v1', routers )
+        this.server.use('/Api/v1/rdStation', routers )
     }
 }
 

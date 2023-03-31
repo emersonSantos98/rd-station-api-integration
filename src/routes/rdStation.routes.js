@@ -2,7 +2,8 @@ const rdStationController = require('../App/Controllers/rdStationController')
 
 const router = require("express").Router();
 
- router.get("/getAuthorizationUrl/:id", rdStationController.getRdStation)
+ router.get("/getAuthorizationUrl", rdStationController.getRdStation)
+ router.get("/getAccessToken", rdStationController.getAccessToken)
 
 
 
