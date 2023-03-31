@@ -4,7 +4,7 @@ const router = require("express").Router();
 
 
 
-router.use(rdStationRouter);
+router.use('/', rdStationRouter);
 
 module.exports = router
 
