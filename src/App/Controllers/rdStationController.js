@@ -8,6 +8,8 @@ const qs = require("qs");
                 this.clientId = clientId;
                 this.clientSecret = clientSecret;
                 this.redirectUri = redirectUri;
+                this.accessToken = null;
+                this.refreshToken = null;
             }
             async getAuthorizationUrl(scope = 'contacts') {
             try {
@@ -45,16 +47,44 @@ const qs = require("qs");
 
             try {
                 const response = await axios.post(tokenUrl, qs.stringify(postData), options);
-                const accessToken = response.data.access_token;
-                const refreshToken = response.data.refresh_token;
+                this.accessToken = response.data.access_token;
+                this.refreshToken = response.data.refresh_token;
                 const expiresIn = response.data.expires_in;
 
-                return {accessToken, refreshToken, expiresIn};
+                return { expiresIn};
             } catch (error) {
                 console.error('erros', error);
                 throw new Error('Failed to get access token');
             }
         }
+
+            async refreshAccessToken( ) {
+            try {
+                const response = await axios.post(
+                    'https://api.rd.services/auth/token',
+                    qs.stringify({
+                        grant_type: 'refresh_token',
+                        refresh_token: this.refreshToken,
+                        client_id: this.clientId,
+                        client_secret: this.clientSecret,
+                    }),
+                    {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }
+                );
+
+                this.accessToken = response.data.access_token;
+                this.refreshToken = response.data.refresh_token;
+
+                return response.data.access_token;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
     }
 
         const rdStationIntegration = new RDStationIntegration(
@@ -62,7 +92,6 @@ const qs = require("qs");
             process.env.RDSTATION_CLIENT_SECRET,
             process.env.RDSTATION_REDIRECT_URI
         );
-console.log('rdStationIntegration', rdStationIntegration)
 
     const getRdStation = async (request, response) => {
     try {
@@ -83,8 +112,15 @@ console.log('rdStationIntegration', rdStationIntegration)
     };
 
 
+    const refreshAccessToken = async (request, response) => {
+    const accessToken = await rdStationIntegration.refreshAccessToken();
+    response.json(accessToken);
+    };
+
+
     module.exports = {
     getRdStation,
     getAccessToken,
+        refreshAccessToken
     }
 
