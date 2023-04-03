@@ -54,12 +54,13 @@ class RDStationIntegration {
             const expiresIn = response.data.expires_in;
             // Save access token to database
 
-
+            //  date_expires_in = DATE_ADD(NOW(), INTERVAL ${expiresIn} SECOND)
             const sql = `UPDATE tb_rd_station_auth
                          SET access_token  = ?,
                              refresh_token = ?,
                              expires_in    = ?,
-                             code          = ?
+                             code          = ?,
+                             date_expires_in = DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL ${expiresIn} SECOND)
                          WHERE id_user = ${id_user}`;
             pool.query(sql, [this.accessToken, this.refreshToken, expiresIn, code], (error, results) => {
                 if (error) {
@@ -100,7 +101,8 @@ class RDStationIntegration {
             const sql = `UPDATE tb_rd_station_auth
                          SET access_token  = ?,
                              refresh_token = ?,
-                             expires_in    = ?
+                             expires_in    = ?,
+                             date_expires_in = DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL ${expiresIn} SECOND)
                          WHERE id = ${id}`;
             console.log('sql', sql)
             pool.query(sql, [accessToken, refreshToken, expiresIn], (error, results) => {

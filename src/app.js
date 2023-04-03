@@ -6,9 +6,11 @@ const morgan = require("morgan");
 const routers = require('./routes')
 const {AppError, AppErrorRDStation} = require("./error/erro");
 require('dotenv').config();
+
 class App {
     server;
-    constructor( ) {
+
+    constructor() {
         this.server = express()
         this.middlewares()
         this.router()
@@ -40,12 +42,11 @@ class App {
                 });
             }
 
-            if(error instanceof AppErrorRDStation) {
-                console.log(JSON.stringify(error.data.errors, null, 2))
+            if (error instanceof AppErrorRDStation) {
+                console.log(JSON.stringify(error, null, 2))
                 return response.status(error.statusCode).json({
                     status: "error",
-                    message: error.data.errors.error_message,
-                    error_type: error.data.errors.error_type
+                    ...error
                 });
             }
 
@@ -58,8 +59,8 @@ class App {
         });
     }
 
-    router(){
-        this.server.use('/Api/v1/rdStation', routers )
+    router() {
+        this.server.use('/Api/v1/rdStation', routers)
     }
 }
 
