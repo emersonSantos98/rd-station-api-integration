@@ -41,11 +41,10 @@ class App {
             }
 
             if(error instanceof AppErrorRDStation) {
-                console.log(JSON.stringify(error.data.errors, null, 2))
+                console.log(JSON.stringify(error.data, null, 2))
                 return response.status(error.statusCode).json({
                     status: "error",
-                    message: error.data.errors.error_message,
-                    error_type: error.data.errors.error_type
+                    message: error,
                 });
             }
 

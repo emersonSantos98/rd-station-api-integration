@@ -37,8 +37,6 @@ module.exports = class RdStationContatoRepository {
                     resolve(response.data)
                 })
                 .catch(error => {
-                    console.log(error.response.data.errors.error_message)
-                    console.log(error.response.data.errors.error_type)
                     reject(error)
                 })
         })
