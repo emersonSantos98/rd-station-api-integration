@@ -10,5 +10,6 @@ const router = require("express").Router();
 
 router.post("/createContact", new AuthRdStation().handle, new CreateContatoController().handle)
 router.get("/contatos/:uuid_contato", new AuthRdStation().handle, new GetContatoByUUIDController().handle)
+
  module.exports = router
 

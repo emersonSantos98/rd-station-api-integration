@@ -6,7 +6,6 @@ const morgan = require("morgan");
 const routers = require('./routes')
 const {AppError, AppErrorRDStation} = require("./error/erro");
 require('dotenv').config();
-
 class App {
     server;
 
@@ -44,9 +43,12 @@ class App {
 
             if (error instanceof AppErrorRDStation) {
                 console.log(JSON.stringify(error, null, 2))
+            if(error instanceof AppErrorRDStation) {
+                console.log(JSON.stringify(error.data, null, 2))
                 return response.status(error.statusCode).json({
                     status: "error",
                     ...error
+                    message: error,
                 });
             }
 
