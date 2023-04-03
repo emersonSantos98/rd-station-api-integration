@@ -1,4 +1,4 @@
-// const pool = require("../../config/database")
+const pool = require("../../config/database")
 const axios = require('axios');
 const qs = require("qs");
 
@@ -50,8 +50,20 @@ const qs = require("qs");
                 this.accessToken = response.data.access_token;
                 this.refreshToken = response.data.refresh_token;
                 const expiresIn = response.data.expires_in;
+                const id = 1;
 
-                return { expiresIn};
+                // Save access token to database
+
+
+                const sql = `UPDATE tb_rd_station_auth SET access_token = ?, refresh_token = ?, expires_in = ? WHERE id = ${id}`;
+                pool.query(sql, [this.accessToken, this.refreshToken, expiresIn], (error, results) => {
+                    if (error) {
+                        throw error;
+                    }
+                    console.log('Access token saved to database');
+                });
+
+                return { expiresIn, accessToken: this.accessToken, refreshToken: this.refreshToken };
             } catch (error) {
                 console.error('erros', error);
                 throw new Error('Failed to get access token');
@@ -75,10 +87,22 @@ const qs = require("qs");
                     }
                 );
 
-                this.accessToken = response.data.access_token;
-                this.refreshToken = response.data.refresh_token;
+                const accessToken = response.data.access_token;
+                const refreshToken = response.data.refresh_token;
+                const expiresIn = response.data.expires_in;
+                const id = 1;
 
-                return response.data.access_token;
+
+                const sql = `UPDATE tb_rd_station_auth SET access_token = ?, refresh_token = ?, expires_in = ? WHERE id = ${id}`;
+                console.log('sql', sql)
+                pool.query(sql, [accessToken, refreshToken, expiresIn], (error, results) => {
+                    if (error) {
+                        throw error;
+                    }
+                    console.log('Access token saved to database');
+                });
+
+                return { expiresIn, accessToken, refreshToken };
             } catch (error) {
                 console.error(error);
             }
