@@ -43,12 +43,9 @@ class App {
 
             if (error instanceof AppErrorRDStation) {
                 console.log(JSON.stringify(error, null, 2))
-            if(error instanceof AppErrorRDStation) {
-                console.log(JSON.stringify(error.data, null, 2))
                 return response.status(error.statusCode).json({
                     status: "error",
                     ...error
-                    message: error,
                 });
             }
 
@@ -61,8 +58,8 @@ class App {
         });
     }
 
-    router() {
-        this.server.use('/Api/v1/rdStation', routers)
+    router(){
+        this.server.use('/Api/v1/rdStation', routers )
     }
 }
 
