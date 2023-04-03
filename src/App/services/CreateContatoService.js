@@ -6,7 +6,9 @@ module.exports = class CreateContatoService {
         const rdStationsRepository = new RdStationsRepository();
         const emailExist = await rdStationsRepository.getContatoByEmail(email)
         .catch((err) => {
-            throw new AppErrorRDStation(err.response.data.errors.error_message, 400, err.response.data);
+            if(err.response.data.errors.error_message === 'The resource could not be found') {
+                return false
+            }
         });
         if(emailExist) {
             throw new AppError('RD Station: Email já cadastrado');
