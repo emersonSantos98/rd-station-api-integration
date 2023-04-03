@@ -1,7 +1,6 @@
 require('dotenv').config();
 const App = require("./src/app").server
 
-
 const port = process.env.PORT;
 
 
@@ -10,7 +9,6 @@ const port = process.env.PORT;
 App.get('/', function (req, res) {
     res.send('Api rodando com sucesso!');
 });
-
 
 
 App.listen(port, (err) => {

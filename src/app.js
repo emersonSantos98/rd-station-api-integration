@@ -1,10 +1,10 @@
 const express = require('express');
+require('express-async-errors');
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const routers = require('./routes')
-const AppError = require("./error/erro");
-require('express-async-errors');
+const {AppError, AppErrorRDStation} = require("./error/erro");
 require('dotenv').config();
 class App {
     server;
@@ -16,11 +16,7 @@ class App {
     }
 
     middlewares() {
-        this.server.use(cors({
-            origin: 'https://meusite.com',
-            methods: ['GET', 'POST', 'PUT', 'DELETE'],
-            allowedHeaders: ['Content-Type', 'Authorization']
-        }));
+        this.server.use(cors());
 
         this.server.use(express.json())
         this.server.use(express.urlencoded({
@@ -43,6 +39,16 @@ class App {
                     message: error.message,
                 });
             }
+
+            if(error instanceof AppErrorRDStation) {
+                console.log(JSON.stringify(error.data.errors, null, 2))
+                return response.status(error.statusCode).json({
+                    status: "error",
+                    message: error.data.errors.error_message,
+                    error_type: error.data.errors.error_type
+                });
+            }
+
 
             return response.status(500).json({
                 status: "error",
