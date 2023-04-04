@@ -80,7 +80,6 @@ class RDStationIntegration {
             const response = await axios.post(
                 'https://api.rd.services/auth/token',
                 qs.stringify({
-                    grant_type: 'refresh_token',
                     refresh_token: this.refreshToken,
                     client_id: this.clientId,
                     client_secret: this.clientSecret,
