@@ -1,5 +1,3 @@
-
-
 class AppError extends Error {
     constructor(message, statusCode = 400, data = null) {
         super(message);
@@ -17,7 +15,7 @@ class AppErrorRDStation extends Error {
 }
 
 module.exports = {
-AppError,
+    AppError,
     AppErrorRDStation
 };
 

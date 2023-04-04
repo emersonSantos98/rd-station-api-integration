@@ -1,5 +1,5 @@
 const axios = require('axios');
-
+const AppError = require('../../error/erro');
 module.exports = class RdStationContatoRepository {
     baseURL = '';
 
@@ -21,24 +21,25 @@ module.exports = class RdStationContatoRepository {
 
     async createContact({name, email, personal_phone, city, state, country}) {
         return new Promise(async (resolve, reject) => {
-            await axios.post(`${this.baseURL}`, {
-                name,
-                email,
-                personal_phone,
-                city,
-                state,
-                country
-            }, {
-                headers: {
-                    Authorization: `Bearer ${process.env.RDSTATION_TOKEN}`,
-                    'Content-Type': 'application/json',
-                },
-            }).then(response => {
-                resolve(response.data)
-            })
-                .catch(error => {
-                    reject(error)
+            try {
+                await axios.post(`${this.baseURL}`, {
+                    name,
+                    email,
+                    personal_phone,
+                    city,
+                    state,
+                    country
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${process.env.RDSTATION_TOKEN}`,
+                        'Content-Type': 'application/json',
+                    },
+                }).then(response => {
+                    resolve(response.data)
                 })
+            } catch (error) {
+                throw new AppError('sadasd')
+            }
         })
     }
 

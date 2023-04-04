@@ -36,15 +36,15 @@ class App {
         this.server.use((error, request, response, next) => {
             if (error instanceof AppError) {
                 return response.status(error.statusCode).json({
-                    status: "error",
-                    message: error.message,
+                    status: "error personalizado",
+                    ...error
                 });
             }
 
             if (error instanceof AppErrorRDStation) {
                 console.log(JSON.stringify(error, null, 2))
                 return response.status(error.statusCode).json({
-                    status: "error",
+                    status: "error personalizado",
                     ...error
                 });
             }
@@ -53,7 +53,7 @@ class App {
             return response.status(500).json({
                 status: "error",
                 message: "Internal server error",
-                error: error.message,
+                error: error,
             });
         });
     }
